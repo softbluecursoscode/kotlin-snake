@@ -1,4 +1,4 @@
-import game.Game
+import snake.game.Game
 
 fun main() {
     Game().start()
