@@ -4,7 +4,7 @@ import snake.graphics.basic.Color
 import snake.graphics.basic.Position
 import java.awt.Graphics
 
-class Text(
+open class Text(
     private val text: String,
     private val position: Position,
     color: Color

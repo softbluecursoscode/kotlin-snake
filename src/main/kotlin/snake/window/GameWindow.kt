@@ -1,6 +1,7 @@
 package snake.window
 
 import snake.graphics.drawable.Drawable
+import snake.graphics.drawable.Rect
 
 class GameWindow(
     title: String,
@@ -9,6 +10,9 @@ class GameWindow(
 ) {
     private val window = JFrameGameWindow(title, width, height)
 
+    val drawingArea: Rect
+        get() = window.drawingArea
+
     fun addDrawable(drawable: Drawable) {
         window.renderer.add(drawable)
     }
@@ -16,4 +20,6 @@ class GameWindow(
     fun removeDrawable(drawable: Drawable) {
         window.renderer.remove(drawable)
     }
+
+    fun update() = window.repaint()
 }

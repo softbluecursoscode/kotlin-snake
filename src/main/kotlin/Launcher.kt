@@ -1,4 +1,4 @@
-import snake.game.Game
+import snake.game.core.Game
 
 fun main() {
     Game().start()

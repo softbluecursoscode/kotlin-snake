@@ -6,11 +6,11 @@ import snake.graphics.basic.Position
 import java.awt.Graphics
 import java.awt.Rectangle
 
-class Rect(
-    x: Int,
-    y: Int,
-    width: Int,
-    height: Int
+open class Rect(
+    x: Int = 0,
+    y: Int = 0,
+    width: Int = 0,
+    height: Int = 0
 ) : Drawable(BLACK) {
 
     private val rectangle = Rectangle(x, y, width, height)
@@ -47,5 +47,14 @@ class Rect(
 
     override fun draw(g: Graphics) {
         g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+    }
+
+    companion object {
+
+        fun shift(rects: MutableList<Rect>) {
+            for (i in rects.size - 1 downTo 1) {
+                rects[i] = rects[i - 1]
+            }
+        }
     }
 }
