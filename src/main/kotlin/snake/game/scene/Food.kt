@@ -6,22 +6,33 @@ import snake.graphics.basic.Position
 import snake.graphics.drawable.Rect
 
 class Food(
-    private val drawingArea: Rect
+    private val drawingArea: Rect,
+    snake: Snake
 ) : Rect() {
 
+    var eatenTimes = 0
+        private set
+
     init {
-        moveToRandomLocation()
+        moveToRandomLocation(snake)
         dimension = Dimension(FOOD_SIZE, FOOD_SIZE)
         color = GREEN
     }
 
-    private fun moveToRandomLocation() {
+    fun eat(snake: Snake) {
+        eatenTimes++
+        moveToRandomLocation(snake)
+    }
+
+    private fun moveToRandomLocation(snake: Snake) {
         val offset = 5
 
-        position = Position(
-            x = (drawingArea.minX + offset..drawingArea.maxX - offset - FOOD_SIZE).random(),
-            y = (drawingArea.minY + offset..drawingArea.maxY - offset - FOOD_SIZE).random(),
-        )
+        do {
+            position = Position(
+                x = (drawingArea.minX + offset..drawingArea.maxX - offset - FOOD_SIZE).random(),
+                y = (drawingArea.minY + offset..drawingArea.maxY - offset - FOOD_SIZE).random(),
+            )
+        } while (snake.intersects(this))
     }
 
     private companion object {

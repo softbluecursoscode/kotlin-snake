@@ -9,4 +9,8 @@ enum class Direction(
     DOWN(0, 1),
     LEFT(-1, 0),
     RIGHT(1, 0);
+
+    fun canChangeTo(other: Direction): Boolean {
+        return !(x + other.x == 0 && y + other.y == 0)
+    }
 }
