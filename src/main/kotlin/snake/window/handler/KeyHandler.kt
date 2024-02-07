@@ -9,7 +9,8 @@ import java.time.Instant.EPOCH
 import javax.swing.JFrame
 
 class KeyHandler(
-    private val owner: JFrame
+    private val owner: JFrame,
+    private val minMillisBetweenKeyPressedEvents: Int,
 ) {
 
     private var currentKeyHandler: KeyListener? = null
@@ -22,7 +23,7 @@ class KeyHandler(
             override fun keyPressed(e: KeyEvent) {
                 val now = Instant.now()
 
-                if (lastKeyboardEventTime.plusMillis(MIN_EVENT_TIME.toLong()).isBefore(now)) {
+                if (lastKeyboardEventTime.plusMillis(minMillisBetweenKeyPressedEvents.toLong()).isBefore(now)) {
                     val key = fromAwtKey(e.keyCode)
 
                     if (key != null) {
@@ -45,9 +46,5 @@ class KeyHandler(
             VK_ESCAPE -> Key.ESC
             else -> null
         }
-    }
-
-    private companion object {
-        private const val MIN_EVENT_TIME = 20
     }
 }

@@ -1,5 +1,6 @@
 package snake.game.scene
 
+import snake.config.SnakeConfig
 import snake.game.core.Direction
 import snake.game.core.Direction.*
 import snake.graphics.basic.Color.WHITE
@@ -8,16 +9,18 @@ import snake.graphics.basic.Position
 import snake.graphics.drawable.Rect
 import snake.graphics.drawable.Shape
 
-class Snake : Shape(WHITE) {
+class Snake(
+    private val config: SnakeConfig
+) : Shape(config.color) {
     private var direction: Direction = NONE
     private var piecesToElongate = 0
 
-    var speed = 0
+    var speed = config.incrementSpeed
         private set
 
     init {
-        val p = Position(200, 100)
-        val d = Dimension(PIECE_SIZE, PIECE_SIZE)
+        val p = Position(config.initialPosition.x, config.initialPosition.y)
+        val d = Dimension(config.pieceSizeInPixels, config.pieceSizeInPixels)
 
         var rect = Rect(p, d)
         addRect(rect)
@@ -86,11 +89,11 @@ class Snake : Shape(WHITE) {
         val areaY1 = drawingArea.minY
         val areaY2 = drawingArea.maxY
 
-        if (headX <= areaX1 || headX + PIECE_SIZE >= areaX2) {
+        if (headX <= areaX1 || headX + config.pieceSizeInPixels >= areaX2) {
             collided = true
         }
 
-        if (headY <= areaY1 || headY + PIECE_SIZE >= areaY2) {
+        if (headY <= areaY1 || headY + config.pieceSizeInPixels >= areaY2) {
             collided = true
         }
 
@@ -106,14 +109,10 @@ class Snake : Shape(WHITE) {
     }
 
     private fun elongate() {
-        piecesToElongate = 5
+        piecesToElongate = config.elongatePieces
     }
 
     private fun faster() {
-        speed += 5
-    }
-
-    private companion object {
-        private const val PIECE_SIZE = 10
+        speed += config.incrementSpeed
     }
 }

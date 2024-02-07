@@ -1,13 +1,14 @@
 package snake.game.scene
 
-import snake.graphics.basic.Color.GREEN
+import snake.config.FoodConfig
 import snake.graphics.basic.Dimension
 import snake.graphics.basic.Position
 import snake.graphics.drawable.Rect
 
 class Food(
     private val drawingArea: Rect,
-    snake: Snake
+    snake: Snake,
+    private val foodConfig: FoodConfig
 ) : Rect() {
 
     var eatenTimes = 0
@@ -15,8 +16,8 @@ class Food(
 
     init {
         moveToRandomLocation(snake)
-        dimension = Dimension(FOOD_SIZE, FOOD_SIZE)
-        color = GREEN
+        dimension = Dimension(foodConfig.sizeInPixels, foodConfig.sizeInPixels)
+        color = foodConfig.color
     }
 
     fun eat(snake: Snake) {
@@ -29,13 +30,9 @@ class Food(
 
         do {
             position = Position(
-                x = (drawingArea.minX + offset..drawingArea.maxX - offset - FOOD_SIZE).random(),
-                y = (drawingArea.minY + offset..drawingArea.maxY - offset - FOOD_SIZE).random(),
+                x = (drawingArea.minX + offset..drawingArea.maxX - offset - foodConfig.sizeInPixels).random(),
+                y = (drawingArea.minY + offset..drawingArea.maxY - offset - foodConfig.sizeInPixels).random(),
             )
         } while (snake.intersects(this))
-    }
-
-    private companion object {
-        private const val FOOD_SIZE = 7
     }
 }

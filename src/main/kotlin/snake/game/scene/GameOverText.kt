@@ -1,15 +1,16 @@
 package snake.game.scene
 
-import snake.game.core.Game.Companion.WINDOW_HEIGHT
-import snake.game.core.Game.Companion.WINDOW_WIDTH
-import snake.graphics.basic.Color.RED
+import snake.config.GameOverConfig
 import snake.graphics.basic.Position
 import snake.graphics.drawable.Text
 
 class GameOverText(
-    score: Int
+    windowWith: Int,
+    windowHeight: Int,
+    score: Int,
+    config: GameOverConfig
 ) : Text(
-    text = "Fim de Jogo! Sua pontuação foi: $score",
-    position = Position(WINDOW_WIDTH / 2 - 90, WINDOW_HEIGHT / 2),
-    color = RED
+    text = String.format(config.textTemplate, score),
+    position = Position(windowWith / 2 + config.positionOffset.x, windowHeight / 2 + config.positionOffset.y),
+    color = config.color
 )

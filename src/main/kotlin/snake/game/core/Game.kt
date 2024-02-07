@@ -1,10 +1,11 @@
 package snake.game.core
 
+import snake.config.GameConfig
+import snake.config.loader.ConfigLoader.load
 import snake.game.scene.Background
 import snake.game.scene.Food
 import snake.game.scene.GameOverText
 import snake.game.scene.Snake
-import snake.graphics.basic.Color.BLACK
 import snake.window.GameWindow
 import snake.window.handler.Key.*
 import java.lang.Thread.sleep
@@ -13,10 +14,20 @@ class Game {
     private lateinit var window: GameWindow
     private lateinit var snake: Snake
     private lateinit var food: Food
+    private lateinit var gameConfig: GameConfig
     private var running = false
 
     fun start() {
-        window = GameWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT)
+        gameConfig = load()
+        println("Configs: $gameConfig")
+
+        window = GameWindow(
+            title = gameConfig.window.title,
+            width = gameConfig.window.width,
+            height = gameConfig.window.height,
+            minMillisBetweenKeyPressedEvents = gameConfig.application.minMillisBetweenKeyPressedEvents
+        )
+
         addElementsToScreen()
         setupKeyPressedHandler()
         setupWindowClosedHandler()
@@ -24,12 +35,18 @@ class Game {
     }
 
     private fun addElementsToScreen() {
-        window.addDrawable(Background(WINDOW_WIDTH, WINDOW_HEIGHT, BLACK))
+        window.addDrawable(
+            Background(
+                gameConfig.window.width,
+                gameConfig.window.height,
+                gameConfig.window.backgroundColor
+            )
+        )
 
-        snake = Snake()
+        snake = Snake(gameConfig.snake)
         window.addDrawable(snake)
 
-        food = Food(window.drawingArea, snake)
+        food = Food(window.drawingArea, snake, gameConfig.food)
         window.addDrawable(food)
     }
 
@@ -54,7 +71,7 @@ class Game {
         running = true
         do {
             updateScene()
-            sleep(MAX_SPEED - snake.speed.toLong())
+            sleep((MAX_SPEED - snake.speed.toLong()).coerceAtLeast(0))
         } while (!isGameOver)
 
         processGameOver()
@@ -70,7 +87,12 @@ class Game {
     private fun processGameOver() {
         window.removeDrawable(snake)
         window.removeDrawable(food)
-        window.addDrawable(GameOverText(food.eatenTimes))
+        window.addDrawable(GameOverText(
+            gameConfig.window.width,
+            gameConfig.window.height,
+            food.eatenTimes,
+            gameConfig.gameOver
+        ))
         window.update()
     }
 
@@ -78,9 +100,6 @@ class Game {
         get() = !running || snake.collidedWithItself() || snake.collidedWithBounds(window.drawingArea)
 
     companion object {
-        const val WINDOW_WIDTH = 400
-        const val WINDOW_HEIGHT = 400
-        private const val WINDOW_TITLE = "Snake!"
         private const val MAX_SPEED = 50
     }
 }

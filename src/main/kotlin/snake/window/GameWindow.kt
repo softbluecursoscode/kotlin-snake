@@ -9,10 +9,11 @@ import snake.window.handler.WindowHandler
 class GameWindow(
     title: String,
     width: Int,
-    height: Int
+    height: Int,
+    minMillisBetweenKeyPressedEvents: Int
 ) {
     private val window = JFrameGameWindow(title, width, height)
-    private val keyHandler = KeyHandler(window)
+    private val keyHandler = KeyHandler(window, minMillisBetweenKeyPressedEvents)
     private val windowHandler = WindowHandler(window)
 
     val drawingArea: Rect
